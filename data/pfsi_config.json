@@ -1,0 +1,7 @@
+{
+  "w_airQuality": 0.30,
+  "w_waterQuality": 0.20,
+  "w_temperature": 0.15,
+  "w_humidity": 0.15,
+  "w_weatherAdaptation": 0.20
+}

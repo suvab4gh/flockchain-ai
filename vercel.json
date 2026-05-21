@@ -1,0 +1,19 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci --legacy-peer-deps",
+  "functions": {
+    "app/api/predict/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/alert/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/stellar/**": {
+      "maxDuration": 30
+    },
+    "app/api/**": {
+      "maxDuration": 15
+    }
+  }
+}

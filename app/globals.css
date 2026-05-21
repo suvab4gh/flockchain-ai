@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#fdfcfb] text-[#191919] antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+
+.glass-card {
+  @apply bg-white/75 backdrop-blur-xl border border-slate-200/50 rounded-2xl;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.015), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.glass-card-hover {
+  @apply bg-white/75 backdrop-blur-xl border border-slate-200/50 rounded-2xl transition-all duration-300;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.015), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.glass-card-hover:hover {
+  @apply -translate-y-0.5 border-slate-300/40 bg-white/90;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.035), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, #059669, #0891b2, #4f46e5);
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+@keyframes gradient-shift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+.neon-emerald { box-shadow: 0 0 16px rgba(16,185,129,0.12); }
+.neon-cyan    { box-shadow: 0 0 16px rgba(6,182,212,0.12); }
+.neon-violet  { box-shadow: 0 0 16px rgba(99,102,241,0.12); }
+
+.live-dot { @apply w-2.5 h-2.5 rounded-full; animation: pulse-glow 2s ease-in-out infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  @apply rounded-lg;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { @apply bg-transparent; }
+::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full hover:bg-slate-300; }
+
+.badge-green  { @apply bg-emerald-50 text-emerald-700 border border-emerald-200; }
+.badge-yellow { @apply bg-amber-50 text-amber-700 border border-amber-200; }
+.badge-orange { @apply bg-orange-50 text-orange-700 border border-orange-200; }
+.badge-red    { @apply bg-rose-50 text-rose-700 border border-rose-200; }
+.badge-blue   { @apply bg-sky-50 text-sky-700 border border-sky-200; }
+.badge-violet { @apply bg-indigo-50 text-indigo-700 border border-indigo-200; }
+
+.gauge-progress { transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1); }
+
+.btn-primary {
+  @apply px-5 py-2.5 rounded-xl font-semibold text-xs transition-all duration-300
+         bg-gradient-to-r from-emerald-600 to-teal-600 text-white
+         hover:from-emerald-500 hover:to-teal-500 hover:shadow-md hover:shadow-emerald-500/10
+         active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-secondary {
+  @apply px-5 py-2.5 rounded-xl font-semibold text-xs transition-all duration-300
+         bg-white text-slate-700 border border-slate-200
+         hover:bg-slate-50 hover:border-slate-300
+         active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-stellar {
+  @apply px-5 py-2.5 rounded-xl font-semibold text-xs transition-all duration-300
+         bg-gradient-to-r from-indigo-600 to-violet-600 text-white
+         hover:from-indigo-500 hover:to-violet-500 hover:shadow-md hover:shadow-indigo-500/10
+         active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.animated-bg {
+  background: radial-gradient(ellipse at 20% 50%, rgba(16,185,129,0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.02) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 80%, rgba(99,102,241,0.02) 0%, transparent 50%),
+              #fdfcfb;
+}
+
+/* Premium Typography System (Copernicus serif = EB Garamond / StyreneB sans = Inter) */
+.font-serif-display {
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+.font-sans-humanist {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.display-xl {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+}
+
+.display-lg {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.display-md {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+
+.display-sm {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.title-lg {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.title-md {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.title-sm {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.body-md {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.body-sm {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.caption {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.caption-uppercase {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.code-style {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.button-style {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.0;
+}
+
+.nav-link-style {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+

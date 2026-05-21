@@ -1,136 +1,261 @@
 # FlockChain AI
 
-Smart poultry health monitoring, farm-specific decision support, and verifiable supply-chain compliance for Indian poultry farms.
+AI-powered poultry health monitoring, farm-specific decision support, and verifiable supply-chain compliance for Indian poultry farms. 
 
-FlockChain AI gives small and mid-sized poultry farmers the kind of disease early warning, telemetry-driven management, and compliance proof that is usually available only to large integrators. The blockchain layer is not the main feature; it is the trust infrastructure that makes farm data useful to buyers, banks, insurers, and inspectors.
+FlockChain AI helps small and mid-sized poultry farms detect disease risks early, improve environmental conditions, and generate trusted compliance records using IoT telemetry, machine learning, and the Stellar blockchain ecosystem.
 
-## The Real Problem
+The blockchain layer is not the core product — it acts as a trust infrastructure that makes farm data verifiable for buyers, insurers, banks, and inspectors.
 
-India is one of the world's largest poultry producers, but many farms still operate without real-time environmental monitoring. That creates four practical problems:
+---
 
-| Problem | What Happens Today | FlockChain AI Response |
-|---|---|---|
-| Disease outbreaks | Ranikhet/Newcastle Disease, avian influenza, respiratory stress, and heat stress can spread before symptoms are obvious | Sensors track NH3, CO2, temperature, humidity, and water TDS; ML and ICAR-CARI/DADF rules warn 24-48 hours earlier |
-| No trusted compliance proof | Farmers cannot prove biosecurity or disease-free operation to buyers and inspectors | Sensor batches and certificates are hashed and anchored on Stellar |
-| No incentive for better biosecurity | Ventilation, water quality, and litter management cost money without immediate reward | PFSI score >= 70 can trigger ECO_KUKK sustainability rewards |
-| Generic advice | Farmers receive broad guidance like "increase ventilation" without shed-specific commands | PPO RL and heuristic fallbacks produce actionable operating recommendations |
+## Overview
 
-## What It Does
+India is one of the world's largest poultry producers, yet many farms still operate without continuous environmental monitoring or verifiable compliance systems.
 
-- Collects poultry shed telemetry through MQTT or demo sensor simulation.
-- Stores recent telemetry in Upstash Redis when configured.
-- Fetches outdoor weather from OpenWeatherMap, with a safe fallback.
-- Predicts disease and environmental risk using a local Python ML service when available.
-- Falls back to an in-process ICAR-CARI / DADF / BIS 10500 rule engine when ML is unavailable.
-- Calculates PFSI, the Poultry Farm Sustainability Index.
-- Anchors sensor hashes and certificates on Stellar using Soroban when configured.
-- Falls back to Classic Horizon `manageData` when no Soroban contract is deployed.
-- Supports Freighter wallet, ECO_KUKK trustlines, rewards, and explicit testnet fallback flows.
-- Exposes admin and farmer dashboards plus public certificate verification APIs.
+FlockChain AI addresses this through:
 
-## Architecture
+* Real-time telemetry collection
+* AI-based disease risk prediction
+* Reinforcement-learning-powered recommendations
+* Sustainability scoring (PFSI)
+* Blockchain-backed certificate verification
+* Farmer and admin dashboards
+* Offline-safe fallback systems for demos and low-connectivity environments
 
-```text
-IoT sensors / demo scenarios
-          |
-          v
-MQTT over WebSocket -> Next.js farmer dashboard
-          |
-          v
-Upstash Redis telemetry history
-          |
-          v
-Python ML server: XGBoost + LSTM + PPO RL
-          |
-          | fallback
-          v
-Local ICAR-CARI / DADF / BIS 10500 rule engine
-          |
-          v
-PFSI score + farm-specific recommendations
-          |
-          v
-Stellar Testnet: Soroban contract or Classic manageData fallback
-```
+---
 
-## Tech Stack
+# Key Problems Solved
 
-| Layer | Technology |
-|---|---|
-| Web app | Next.js App Router, React, TypeScript |
-| Styling | Tailwind CSS, Recharts, lucide-react |
-| Telemetry | MQTT over WebSocket, HiveMQ-compatible connection, demo sensor rotation |
-| Data cache | Upstash Redis REST |
-| Weather | OpenWeatherMap |
-| Prediction | Local FastAPI ML service with XGBoost, LSTM, PPO RL |
-| Fallback prediction | Local ICAR-CARI / DADF / BIS 10500 rule engine |
-| Blockchain | Stellar SDK, Freighter Wallet, Classic Horizon, Soroban RPC |
-| Payments | ECO_KUKK token reward flow, optional MPP gate for `/api/predict` |
-| Deployment | Vercel |
+| Problem                            | Current Situation                                                                                                           | FlockChain AI Solution                                                        |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Disease outbreaks                  | Diseases like Newcastle Disease, avian influenza, respiratory stress, and heat stress spread before visible symptoms appear | Sensor monitoring + ML predictions provide early warnings 24–48 hours earlier |
+| No trusted compliance proof        | Farmers struggle to prove biosecurity standards to buyers and inspectors                                                    | Sensor data and certificates are hashed and anchored on Stellar               |
+| Weak incentives for sustainability | Better ventilation and hygiene increase costs without visible rewards                                                       | Farms with strong PFSI scores become reward eligible                          |
+| Generic farming advice             | Farmers receive non-specific recommendations                                                                                | PPO RL models generate shed-specific operational guidance                     |
 
-## Current Pages
+---
 
-| Page | Route | Status |
-|---|---|---|
-| Landing page | `/` | Complete: current ML, Soroban, MPP, and farm-trust positioning |
-| Farmer dashboard | `/farmer` | Complete: sensors, prediction, weather, PFSI, recommendations, trends, Stellar flow |
-| Admin dashboard | `/admin` | Complete: consumes `/api/dashboard/admin` with fallback data if the API is unavailable |
+# Core Features
 
-## API Routes
+## Smart Telemetry Monitoring
 
-| Method | Path | Purpose |
-|---|---|---|
-| `POST` | `/api/sensor` | Store telemetry history in Redis |
-| `GET` | `/api/weather` | Fetch outdoor weather |
-| `POST` | `/api/predict` | ML prediction with rule-based fallback and optional MPP gate |
-| `POST`, `GET` | `/api/rl/recommend` | PPO recommendation with heuristic fallback |
-| `POST`, `GET` | `/api/pfsi` | Calculate PFSI score |
-| `GET` | `/api/dashboard/farmer` | Farmer dashboard aggregate data |
-| `GET` | `/api/dashboard/admin` | Admin analytics data |
-| `GET` | `/api/mpp/status` | MPP configuration and paid endpoint map |
-| `GET` | `/api/stellar/balance` | ECO_KUKK balance and trustline status |
-| `POST` | `/api/stellar/hash` | Anchor sensor hash on Soroban or Classic Horizon |
-| `POST` | `/api/stellar/trustline` | Create and submit trustline XDR |
-| `POST` | `/api/stellar/reward` | Send ECO_KUKK reward when eligible |
-| `GET`, `POST` | `/api/stellar/certificate` | Preview or issue farm certificate |
-| `GET` | `/api/stellar/verify` | Public certificate verifier |
+Tracks poultry shed conditions using MQTT-connected sensors or demo simulations:
 
-## PFSI Formula
+* Temperature
+* Humidity
+* Ammonia (NH3)
+* Carbon dioxide (CO2)
+* Water TDS
 
-PFSI is calculated from air quality, water quality, temperature control, humidity control, and weather adaptation.
+---
+
+## AI Disease Prediction
+
+Supports two prediction paths:
+
+### Primary ML Pipeline
+
+* XGBoost
+* LSTM
+* PPO Reinforcement Learning
+
+### Fallback Prediction Engine
+
+If the ML server is unavailable, the system automatically switches to a rule-based engine built using:
+
+* ICAR-CARI standards
+* DADF guidelines
+* BIS 10500 references
+
+---
+
+## Poultry Farm Sustainability Index (PFSI)
+
+Calculates sustainability and operational quality using environmental metrics.
+
+### Formula
+
+PFSI = airQuality \times 0.30 + waterQuality \times 0.20 + temperature \times 0.15 + humidity \times 0.15 + weatherAdaptation \times 0.20
+
+### Score Categories
+
+| Score  | Label     | Meaning                   |
+| ------ | --------- | ------------------------- |
+| 86–100 | Excellent | Reward eligible           |
+| 66–85  | Good      | Reward eligible           |
+| 41–65  | Moderate  | Needs improvement         |
+| 0–40   | Poor      | Immediate action required |
+
+Weights are loaded from:
 
 ```text
-PFSI = airQuality * 0.30
-     + waterQuality * 0.20
-     + temperature * 0.15
-     + humidity * 0.15
-     + weatherAdaptation * 0.20
+data/pfsi_config.json
 ```
 
-Weights are loaded from [data/pfsi_config.json](data/pfsi_config.json).
+---
 
-| Score | Label | Meaning |
-|---|---|---|
-| 86-100 | Excellent | Reward eligible |
-| 66-85 | Good | Reward eligible |
-| 41-65 | Moderate | Needs improvement |
-| 0-40 | Poor | Action required |
+## Blockchain Verification
 
-## Quick Start
+Uses Stellar Testnet for:
+
+* Sensor data anchoring
+* Compliance certificates
+* Trustline creation
+* Reward issuance
+* Supply-chain verification
+
+### Fallback Strategy
+
+If Soroban contracts are unavailable:
+
+* Falls back to Stellar Classic Horizon `manageData`
+* Demo-safe mock references keep UI functional
+
+---
+
+## Dashboard System
+
+### Farmer Dashboard (`/farmer`)
+
+Includes:
+
+* Live telemetry
+* Disease prediction
+* Weather integration
+* PFSI score
+* Recommendations
+* Blockchain verification
+
+### Admin Dashboard (`/admin`)
+
+Provides:
+
+* Farm analytics
+* Aggregate monitoring
+* Certificate management
+* Verification workflows
+
+---
+
+# System Architecture
+
+```text
+IoT Sensors / Demo Simulation
+            │
+            ▼
+ MQTT over WebSocket
+            │
+            ▼
+ Next.js Farmer Dashboard
+            │
+            ▼
+   Upstash Redis Cache
+            │
+            ▼
+ Python ML Service
+(XGBoost + LSTM + PPO RL)
+            │
+            ▼
+Fallback Rule Engine
+(ICAR-CARI / DADF / BIS)
+            │
+            ▼
+  PFSI + Recommendations
+            │
+            ▼
+ Stellar Testnet
+(Soroban or Classic Horizon)
+```
+
+---
+
+# Tech Stack
+
+| Layer      | Technology                            |
+| ---------- | ------------------------------------- |
+| Frontend   | Next.js App Router, React, TypeScript |
+| Styling    | Tailwind CSS, Recharts, lucide-react  |
+| Telemetry  | MQTT over WebSocket                   |
+| Data Cache | Upstash Redis                         |
+| Weather    | OpenWeatherMap                        |
+| ML Service | FastAPI, XGBoost, LSTM, PPO RL        |
+| Blockchain | Stellar SDK, Soroban, Horizon         |
+| Wallet     | Freighter Wallet                      |
+| Deployment | Vercel                                |
+
+---
+
+# Project Structure
+
+```text
+/
+├── app/
+├── api/
+├── contracts/
+├── data/
+├── ml/
+├── public/
+├── components/
+├── styles/
+└── README.md
+```
+
+---
+
+# API Routes
+
+| Method   | Endpoint                   | Purpose               |
+| -------- | -------------------------- | --------------------- |
+| POST     | `/api/sensor`              | Store telemetry       |
+| GET      | `/api/weather`             | Fetch weather         |
+| POST     | `/api/predict`             | Disease prediction    |
+| POST/GET | `/api/rl/recommend`        | RL recommendations    |
+| POST/GET | `/api/pfsi`                | PFSI calculation      |
+| GET      | `/api/dashboard/farmer`    | Farmer dashboard data |
+| GET      | `/api/dashboard/admin`     | Admin analytics       |
+| GET      | `/api/mpp/status`          | MPP status            |
+| GET      | `/api/stellar/balance`     | Wallet balance        |
+| POST     | `/api/stellar/hash`        | Anchor sensor hash    |
+| POST     | `/api/stellar/trustline`   | Create trustline      |
+| POST     | `/api/stellar/reward`      | Send ECO_KUKK reward  |
+| GET/POST | `/api/stellar/certificate` | Manage certificates   |
+| GET      | `/api/stellar/verify`      | Public verification   |
+
+---
+
+# Quick Start
+
+## 1. Install Dependencies
 
 ```bash
 npm install
+```
+
+---
+
+## 2. Configure Environment
+
+```bash
 cp .env.example .env.local
+```
+
+---
+
+## 3. Start Development Server
+
+```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open:
 
-The app works without paid services by using demo sensors, fallback weather, local rule prediction, and Stellar fallback behavior.
+```text
+http://localhost:3000
+```
 
-## Environment Variables
+---
 
-Copy [.env.example](.env.example) to `.env.local` and fill only the services you want to enable.
+# Environment Variables
 
 ```env
 UPSTASH_REDIS_REST_URL=
@@ -154,129 +279,166 @@ MPP_AMOUNT=0.01
 ML_SERVER_URL=http://127.0.0.1:8000/predict
 ```
 
-No Anthropic or Claude API key is required. Earlier docs referenced Claude, but the current implementation uses the local Python ML service and the rule-based fallback.
+---
 
-## Running the ML Service
+# Running the ML Service
 
-The Next.js app works without the Python ML server — `/api/predict` falls back to the ICAR-CARI/DADF/BIS rule engine. To activate the full XGBoost + LSTM + PPO RL path, run the ML server using one of the options below.
+The app works without the Python ML server because fallback rules are built in.
 
-### Option A — Local (development)
+To enable the full ML pipeline:
+
+---
+
+## Option A — Local Development
 
 ```bash
 cd ml
+
 pip install -r requirements.txt
-python train_indian_dataset_pipeline.py   # train models (first time only, ~5 min)
-python app.py                             # starts FastAPI on http://127.0.0.1:8000
+
+python train_indian_dataset_pipeline.py
+
+python app.py
 ```
 
-Set in `.env.local`:
+Set:
+
 ```env
 ML_SERVER_URL=http://127.0.0.1:8000/predict
 ```
 
-### Option B — Google Colab + ngrok (demo / hackathon)
+---
 
-Use this to run the GPU-accelerated model in Colab and expose it to your Vercel deployment.
+## Option B — Google Colab + ngrok
 
-**Step 1**: Upload `ml/models/` to Google Drive at:
-```
-MyDrive/flockchain_ai/models/
-```
+Useful for hackathons and demos.
 
-**Step 2**: Get a free ngrok auth token from [dashboard.ngrok.com](https://dashboard.ngrok.com/get-started/your-authtoken)
+### Steps
 
-**Step 3**: Open `ml/colab_server.py` and paste each `CELL_N` block into a new Colab cell.
+1. Upload model files to Google Drive
+2. Get an ngrok auth token
+3. Run `ml/colab_server.py`
+4. Copy generated URL into Vercel environment variables
 
-- **Cell 1** — Install deps (fastapi, torch, xgboost, stable-baselines3, pyngrok)
-- **Cell 2** — Mount Google Drive
-- **Cell 3** — Copy model files from Drive to Colab runtime
-- **Cell 4** — Model sanity check (loads all 4 models, confirms they work)
-- **Cell 5** — Start FastAPI server + ngrok tunnel
+Example:
 
-When Cell 5 runs, you will see:
-```
-╔══════════════════════════════════════════════════╗
-║  🚀  FlockChain AI ML Server is LIVE            ║
-║  Public URL:  https://abcd-1234.ngrok-free.app  ║
-║  ML_SERVER_URL = https://abcd-1234.ngrok-free.app/predict ║
-╚══════════════════════════════════════════════════╝
+```env
+ML_SERVER_URL=https://abcd-1234.ngrok-free.app/predict
 ```
 
-**Step 4**: Copy that URL into Vercel:
+---
+
+## Option C — Production Deployment
+
+Deploy the ML server separately on:
+
+* Render
+* Railway
+
+Start command:
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port $PORT
 ```
-Vercel → Project → Settings → Environment Variables
-ML_SERVER_URL = https://abcd-1234.ngrok-free.app/predict
-```
 
-Redeploy. Your live Vercel app will now use the Colab-hosted XGBoost + LSTM + PPO models.
+---
 
-> **Note**: Colab sessions disconnect after ~12 hours of inactivity. The ngrok URL changes each restart. For persistent demo uptime, use Option C.
+# Stellar + Soroban Setup
 
-### Option C — Production (Render / Railway)
-
-Deploy `ml/app.py` as a persistent web service:
-
-1. Push your repo to GitHub
-2. Create a new Web Service on [Render](https://render.com) or [Railway](https://railway.app)
-3. Set root directory to `ml/`
-4. Start command: `uvicorn app:app --host 0.0.0.0 --port $PORT`
-5. Set env var: `MODELS_DIR=/opt/render/project/src/models`
-6. Copy the service URL to Vercel as `ML_SERVER_URL`
-
-
-## Stellar and Soroban
-
-Out of the box, the app can anchor hashes using Classic Horizon `manageData`. To enable Soroban contract state and on-chain business logic:
+Deploy contracts:
 
 ```bash
 cd contracts
+
 bash deploy.sh
 ```
 
-Then copy the deployed contract ID into `.env.local`:
+Add contract ID:
 
 ```env
 SOROBAN_CONTRACT_ID=C...
 ```
 
-When `SOROBAN_CONTRACT_ID` is missing or Soroban fails, the app falls back to Classic Horizon. If Stellar itself is unreachable during a demo, selected routes can still return clearly marked mock references so the UI remains usable.
+If unavailable, the app automatically falls back to Classic Horizon.
 
-## Demo Flow
+---
 
-1. Open `/`.
-2. Go to `/farmer`.
-3. Watch MQTT or simulated telemetry update every 10 seconds.
-4. Click refresh on the risk panel to run ML or fallback prediction.
-5. Review PFSI, weather impact, and recommendations.
-6. Connect Freighter on Stellar Testnet.
-7. Anchor sensor data and inspect the returned Stellar link.
-8. Open `/admin`.
-9. Generate a certificate and verify it with `/api/stellar/verify?certId=...`.
+# Demo Workflow
 
-## Known Gaps
+1. Open `/`
+2. Navigate to `/farmer`
+3. Watch live telemetry updates
+4. Run predictions
+5. Review PFSI score and recommendations
+6. Connect Freighter wallet
+7. Anchor sensor data
+8. Open `/admin`
+9. Generate and verify certificates
 
-| Gap | Impact | Next Fix |
-|---|---|---|
-| Soroban contract may not be deployed | Hash and certificate routes use Classic Horizon fallback | Install Rust/Stellar CLI and run `contracts/deploy.sh` |
-| ML model binaries are local-only | Vercel deploys should use the rule fallback or an external ML service URL | Host the FastAPI ML service separately and set `ML_SERVER_URL` |
-| Python ML server may not be running | Next.js prediction route uses ICAR-CARI/DADF fallback | Run `cd ml && python app.py` after installing `ml/requirements.txt` |
-| Full blockchain deployment requires testnet credentials | Rewards/trustlines need a funded issuer and Freighter wallet | Set `STELLAR_SECRET_KEY` and use Freighter Testnet |
+---
 
-## Verification Notes
+# Known Limitations
 
-Known local checks:
+| Limitation                  | Current Behavior      | Suggested Fix          |
+| --------------------------- | --------------------- | ---------------------- |
+| Soroban contract missing    | Uses Horizon fallback | Deploy contracts       |
+| ML models local-only        | Uses fallback rules   | Host ML service        |
+| ML server offline           | Uses rule engine      | Run FastAPI server     |
+| Testnet credentials missing | Rewards disabled      | Configure Stellar keys |
+
+---
+
+# Verification
+
+## Type Check
 
 ```bash
 npm run lint
 ```
 
-The lint script currently runs TypeScript's no-emit check. `next lint` is not used because it is no longer valid for the installed Next.js version in this workspace.
+---
 
-`npm run build` may fail if stale `.next` artifacts are locked by a running dev server or by the local filesystem. Stop the dev server and remove `.next` if needed, then rerun the build.
+## Build Issues
 
-## License
+If `.next` artifacts are locked:
 
-MIT. Built for hackathon demonstration and field-oriented poultry farm monitoring experiments.
-#   f l o c k c h a i n - a i  
- #   f l o c k c h a i n - a i  
- 
+```bash
+rm -rf .next
+```
+
+Then rerun:
+
+```bash
+npm run build
+```
+
+---
+
+# Deployment
+
+Recommended stack:
+
+* Frontend → Vercel
+* ML Service → Render/Railway
+* Blockchain → Stellar Testnet
+* Redis → Upstash
+
+---
+
+# Future Improvements
+
+* Edge AI prediction on-device
+* Mobile farmer app
+* Real hardware sensor integration
+* Multi-farm analytics
+* Automated disease reporting
+* Carbon-credit tracking
+* Supply-chain marketplace integration
+
+---
+
+# License
+
+MIT License.
+
+Built for hackathon demonstrations, smart agriculture research, and poultry farm monitoring experiments.

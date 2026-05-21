@@ -277,3 +277,5 @@ The lint script currently runs TypeScript's no-emit check. `next lint` is not us
 ## License
 
 MIT. Built for hackathon demonstration and field-oriented poultry farm monitoring experiments.
+#   f l o c k c h a i n - a i  
+ 

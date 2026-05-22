@@ -310,9 +310,16 @@ export default function FarmerDashboard() {
         </div>
       )}
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-10">
 
-        {/* ── KPI Row ── */}
+        {/* ── Section 1: Live Telemetry & AI Diagnostics ── */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-[#E2E0DB] pb-2">
+            <Activity className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Live Telemetry & AI Diagnostics</h2>
+          </div>
+
+          {/* ── KPI Row ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { icon: Shield,    label: 'Disease Risk',    value: prediction ? `${prediction.riskScore}%` : '--', color: riskColor,  sub: prediction?.riskCategory || 'Waiting...' },
@@ -349,12 +356,28 @@ export default function FarmerDashboard() {
             <RecommendationCard recommendations={prediction?.recommendations || []} />
           </div>
         </div>
+        </section>
+
+        {/* ── Section 2: Historical Trends & Scoring ── */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-[#E2E0DB] pb-2">
+            <TrendingUp className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Historical Trends & PFSI Scoring</h2>
+          </div>
 
         {/* ── PFSI + Trend Row ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <PFSIGauge pfsi={pfsi} />
           <TelemetryTrendChart history={sensorHistory} />
         </div>
+        </section>
+
+        {/* ── Section 3: Stellar Alert Logs ── */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-[#E2E0DB] pb-2">
+            <Zap className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Stellar Auto-Response Logs</h2>
+          </div>
 
         {/* ── Alert Event Log ── */}
         {alertEvents.length > 0 && (
@@ -415,8 +438,10 @@ export default function FarmerDashboard() {
             </a>
           </div>
         )}
+        </section>
 
       </main>
+
     </div>
   )
 }

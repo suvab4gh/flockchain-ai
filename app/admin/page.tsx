@@ -179,7 +179,14 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-10">
+
+        {/* ── Section 1: District Overview & Analytics ── */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-[#E2E0DB] pb-2">
+            <Globe className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest">District Overview & Analytics</h2>
+          </div>
 
         {/* ── Summary KPIs ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -253,6 +260,14 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+        </section>
+
+        {/* ── Section 2: Farm Registry ── */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-[#E2E0DB] pb-2">
+            <Users className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Farm Registry</h2>
+          </div>
 
         {/* ── Farm Registry Table ── */}
         <div className="bg-white border border-[#E2E0DB] rounded-2xl overflow-hidden">
@@ -317,6 +332,14 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
+        </section>
+
+        {/* ── Section 3: Stellar Proofs & Ledger Audit ── */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-[#E2E0DB] pb-2">
+            <Link2 className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Stellar Proofs & Ledger Audit</h2>
+          </div>
 
         {/* ── Certificate Generator + Ledger Audit Row ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -466,6 +489,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+        </section>
 
       </main>
     </div>

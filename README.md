@@ -1,444 +1,131 @@
-# FlockChain AI
+# 🐓 FlockChain AI
 
-AI-powered poultry health monitoring, farm-specific decision support, and verifiable supply-chain compliance for Indian poultry farms. 
+**Edge-AI & Blockchain-powered Predictive Biosecurity for Poultry Farms.**
 
-FlockChain AI helps small and mid-sized poultry farms detect disease risks early, improve environmental conditions, and generate trusted compliance records using IoT telemetry, machine learning, and the Stellar blockchain ecosystem.
-
-The blockchain layer is not the core product — it acts as a trust infrastructure that makes farm data verifiable for buyers, insurers, banks, and inspectors.
+FlockChain AI transforms poultry biosecurity from reactive to predictive. It uses a **3-Tier AI Engine** to analyze real-time IoT shed telemetry and detect disease outbreaks (like Avian Flu and Newcastle) 3–7 days before visible symptoms appear. When critical risks are detected, the system autonomously triggers **Stellar smart contracts** to dispatch veterinarians and mints immutable health records for transparent insurance payouts.
 
 ---
 
-## Overview
+## 🚀 The Problem & Solution
 
-India is one of the world's largest poultry producers, yet many farms still operate without continuous environmental monitoring or verifiable compliance systems.
+**The Problem:** Current biosecurity is reactive. By the time a farmer sees a sick bird, the entire flock is compromised. This leads to devastating economic losses, rapid disease spread to neighboring farms, and massive friction in insurance claims due to a lack of verifiable proof.
 
-FlockChain AI addresses this through:
-
-* Real-time telemetry collection
-* AI-based disease risk prediction
-* Reinforcement-learning-powered recommendations
-* Sustainability scoring (PFSI)
-* Blockchain-backed certificate verification
-* Farmer and admin dashboards
-* Offline-safe fallback systems for demos and low-connectivity environments
+**The Solution:**
+1. **Predictive Analytics:** Edge AI and NVIDIA LLMs detect anomalies in NH3, CO2, temperature, and humidity *before* birds get sick.
+2. **Autonomous Response:** Stellar Soroban smart contracts automatically pay and dispatch veterinarians the second risk crosses the 70% threshold.
+3. **Immutable Trust:** Sensor data is hashed to the Stellar testnet, creating a tamper-proof audit trail for rapid insurance payouts and the minting of "Disease-Free" Health Certificates.
 
 ---
 
-# Key Problems Solved
+## 🧠 3-Tier AI Architecture
 
-| Problem                            | Current Situation                                                                                                           | FlockChain AI Solution                                                        |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Disease outbreaks                  | Diseases like Newcastle Disease, avian influenza, respiratory stress, and heat stress spread before visible symptoms appear | Sensor monitoring + ML predictions provide early warnings 24–48 hours earlier |
-| No trusted compliance proof        | Farmers struggle to prove biosecurity standards to buyers and inspectors                                                    | Sensor data and certificates are hashed and anchored on Stellar               |
-| Weak incentives for sustainability | Better ventilation and hygiene increase costs without visible rewards                                                       | Farms with strong PFSI scores become reward eligible                          |
-| Generic farming advice             | Farmers receive non-specific recommendations                                                                                | PPO RL models generate shed-specific operational guidance                     |
+Our resilient, offline-capable AI cascade ensures the farm is always monitored, regardless of connectivity:
 
----
-
-# Core Features
-
-## Smart Telemetry Monitoring
-
-Tracks poultry shed conditions using MQTT-connected sensors or demo simulations:
-
-* Temperature
-* Humidity
-* Ammonia (NH3)
-* Carbon dioxide (CO2)
-* Water TDS
+* **Tier 1 (Edge ML):** Local Python server running **XGBoost** for anomaly detection, **LSTM** for time-series forecasting, and **PPO Reinforcement Learning** for autonomous climate control recommendations.
+* **Tier 2 (NVIDIA NIM):** Uses the **MiniMax M2.7 LLM** via the NVIDIA API to analyze environmental data against ICAR-CARI clinical standards, outputting structured disease risks and actionable interventions.
+* **Tier 3 (Serverless Fallback):** A hardcoded, lightning-fast Next.js rule-based engine built strictly on Indian Government (DADF/BIS) standards.
 
 ---
 
-## AI Disease Prediction
+## ⛓️ Blockchain Layer (Stellar)
 
-Supports two prediction paths:
+The blockchain layer acts as the trust infrastructure. We use the **Stellar Testnet** for:
+* **Telemetry Anchoring:** Hashing live sensor data batches to the ledger to prevent data tampering.
+* **Soroban Smart Contracts:** Autonomous event triggers (e.g., vet dispatch via XLM micropayments).
+* **ECO_KUKK Rewards:** Farmers who maintain a high PFSI (Poultry Farm Sustainability Index) > 70 are minted custom reward tokens.
+* **Health Certificates:** Verifiable, on-chain assets proving a flock is disease-free for supply chain buyers.
 
-### Primary ML Pipeline
-
-* XGBoost
-* LSTM
-* PPO Reinforcement Learning
-
-### Fallback Prediction Engine
-
-If the ML server is unavailable, the system automatically switches to a rule-based engine built using:
-
-* ICAR-CARI standards
-* DADF guidelines
-* BIS 10500 references
+*(Note: We use Freighter API v2.0 for wallet connections, supporting both real testnet accounts and a built-in Demo Mode).*
 
 ---
 
-## Poultry Farm Sustainability Index (PFSI)
+## 🛠️ Tech Stack
 
-Calculates sustainability and operational quality using environmental metrics.
-
-### Formula
-
-PFSI = airQuality \times 0.30 + waterQuality \times 0.20 + temperature \times 0.15 + humidity \times 0.15 + weatherAdaptation \times 0.20
-
-### Score Categories
-
-| Score  | Label     | Meaning                   |
-| ------ | --------- | ------------------------- |
-| 86–100 | Excellent | Reward eligible           |
-| 66–85  | Good      | Reward eligible           |
-| 41–65  | Moderate  | Needs improvement         |
-| 0–40   | Poor      | Immediate action required |
-
-Weights are loaded from:
-
-```text
-data/pfsi_config.json
-```
+| Component | Technology |
+| :--- | :--- |
+| **Frontend** | Next.js (App Router), React, Tailwind CSS |
+| **Blockchain** | Stellar SDK, Soroban, Freighter API v2.0, Horizon |
+| **AI (Cloud)** | NVIDIA NIM API (MiniMax M2.7 LLM) |
+| **AI (Edge)** | Python, FastAPI, XGBoost, PyTorch (LSTM + PPO) |
+| **Real-time Data**| MQTT over WebSocket (HiveMQ) |
+| **Deployment** | Vercel (Web), Local/Google Colab (ML) |
 
 ---
 
-## Blockchain Verification
+## 🖥️ System Dashboards
 
-Uses Stellar Testnet for:
-
-* Sensor data anchoring
-* Compliance certificates
-* Trustline creation
-* Reward issuance
-* Supply-chain verification
-
-### Fallback Strategy
-
-If Soroban contracts are unavailable:
-
-* Falls back to Stellar Classic Horizon `manageData`
-* Demo-safe mock references keep UI functional
+* **Farmer Portal (`/farmer`):**
+  * Live MQTT Telemetry Gauges
+  * 3-Tier AI Disease Predictor & Recommendations
+  * PFSI Score & Reward Claims
+  * Stellar Auto-Response Logs
+* **Admin Command Center (`/admin`):**
+  * District-wide Analytics & KPI Rollups
+  * Farm Registry & Health Monitoring
+  * Ledger Audit Trail & Certificate Generator
 
 ---
 
-## Dashboard System
+## ⚙️ Quick Start (Local Development)
 
-### Farmer Dashboard (`/farmer`)
-
-Includes:
-
-* Live telemetry
-* Disease prediction
-* Weather integration
-* PFSI score
-* Recommendations
-* Blockchain verification
-
-### Admin Dashboard (`/admin`)
-
-Provides:
-
-* Farm analytics
-* Aggregate monitoring
-* Certificate management
-* Verification workflows
-
----
-
-# System Architecture
-
-```text
-IoT Sensors / Demo Simulation
-            │
-            ▼
- MQTT over WebSocket
-            │
-            ▼
- Next.js Farmer Dashboard
-            │
-            ▼
-   Upstash Redis Cache
-            │
-            ▼
- Python ML Service
-(XGBoost + LSTM + PPO RL)
-            │
-            ▼
-Fallback Rule Engine
-(ICAR-CARI / DADF / BIS)
-            │
-            ▼
-  PFSI + Recommendations
-            │
-            ▼
- Stellar Testnet
-(Soroban or Classic Horizon)
-```
-
----
-
-# Tech Stack
-
-| Layer      | Technology                            |
-| ---------- | ------------------------------------- |
-| Frontend   | Next.js App Router, React, TypeScript |
-| Styling    | Tailwind CSS, Recharts, lucide-react  |
-| Telemetry  | MQTT over WebSocket                   |
-| Data Cache | Upstash Redis                         |
-| Weather    | OpenWeatherMap                        |
-| ML Service | FastAPI, XGBoost, LSTM, PPO RL        |
-| Blockchain | Stellar SDK, Soroban, Horizon         |
-| Wallet     | Freighter Wallet                      |
-| Deployment | Vercel                                |
-
----
-
-# Project Structure
-
-```text
-/
-├── app/
-├── api/
-├── contracts/
-├── data/
-├── ml/
-├── public/
-├── components/
-├── styles/
-└── README.md
-```
-
----
-
-# API Routes
-
-| Method   | Endpoint                   | Purpose               |
-| -------- | -------------------------- | --------------------- |
-| POST     | `/api/sensor`              | Store telemetry       |
-| GET      | `/api/weather`             | Fetch weather         |
-| POST     | `/api/predict`             | Disease prediction    |
-| POST/GET | `/api/rl/recommend`        | RL recommendations    |
-| POST/GET | `/api/pfsi`                | PFSI calculation      |
-| GET      | `/api/dashboard/farmer`    | Farmer dashboard data |
-| GET      | `/api/dashboard/admin`     | Admin analytics       |
-| GET      | `/api/mpp/status`          | MPP status            |
-| GET      | `/api/stellar/balance`     | Wallet balance        |
-| POST     | `/api/stellar/hash`        | Anchor sensor hash    |
-| POST     | `/api/stellar/trustline`   | Create trustline      |
-| POST     | `/api/stellar/reward`      | Send ECO_KUKK reward  |
-| GET/POST | `/api/stellar/certificate` | Manage certificates   |
-| GET      | `/api/stellar/verify`      | Public verification   |
-
----
-
-# Quick Start
-
-## 1. Install Dependencies
-
+### 1. Install Dependencies
+The project requires `npm install --legacy-peer-deps` due to the `qrcode` package.
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
----
-
-## 2. Configure Environment
-
+### 2. Configure Environment Variables
+Copy the example environment file:
 ```bash
 cp .env.example .env.local
 ```
+Add your **NVIDIA_API_KEY** (from NVIDIA NIM) if you want to use the Tier-2 LLM. Add your **STELLAR_SECRET_KEY** for automated backend transactions.
 
----
-
-## 3. Start Development Server
-
+### 3. Start the Web App
 ```bash
 npm run dev
 ```
+Open `http://localhost:3000`.
 
-Open:
-
-```text
-http://localhost:3000
-```
-
----
-
-# Environment Variables
-
-```env
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-
-OPENWEATHER_API_KEY=
-FARM_LOCATION=Kolkata,IN
-
-NEXT_PUBLIC_HIVEMQ_HOST=
-NEXT_PUBLIC_HIVEMQ_PORT=8884
-NEXT_PUBLIC_HIVEMQ_USERNAME=
-NEXT_PUBLIC_HIVEMQ_PASSWORD=
-
-STELLAR_SECRET_KEY=
-NEXT_PUBLIC_STELLAR_NETWORK=testnet
-SOROBAN_CONTRACT_ID=
-
-MPP_ENABLED=false
-MPP_AMOUNT=0.01
-
-ML_SERVER_URL=http://127.0.0.1:8000/predict
-```
-
----
-
-# Running the ML Service
-
-The app works without the Python ML server because fallback rules are built in.
-
-To enable the full ML pipeline:
-
----
-
-## Option A — Local Development
-
+### 4. Start the Edge ML Server (Optional)
+If you want to use Tier-1 (XGBoost + LSTM), open a second terminal:
 ```bash
 cd ml
-
+python -m venv .venv
+.venv\Scripts\activate  # Or source .venv/bin/activate on Mac/Linux
 pip install -r requirements.txt
-
-python train_indian_dataset_pipeline.py
-
 python app.py
 ```
 
-Set:
+---
 
-```env
-ML_SERVER_URL=http://127.0.0.1:8000/predict
-```
+## 🌐 Deployment (Vercel)
+
+The app is fully optimized for Vercel deployment. 
+1. Push your code to GitHub.
+2. Import the project in Vercel.
+3. Under Build Command, ensure it runs `npm run build`.
+4. Add all environment variables from `.env.local` to Vercel.
+5. **Important:** Vercel cannot reach your local `127.0.0.1` Python ML server. On Vercel, the app will automatically route AI predictions to Tier 2 (NVIDIA) or Tier 3 (ICAR Rules).
+
+*(Note: We have pre-configured `vercel.json` to extend the serverless function timeout to 30s to accommodate complex LLM and Stellar Horizon API calls).*
 
 ---
 
-## Option B — Google Colab + ngrok
+## 🔗 APIs & Endpoints
 
-Useful for hackathons and demos.
-
-### Steps
-
-1. Upload model files to Google Drive
-2. Get an ngrok auth token
-3. Run `ml/colab_server.py`
-4. Copy generated URL into Vercel environment variables
-
-Example:
-
-```env
-ML_SERVER_URL=https://abcd-1234.ngrok-free.app/predict
-```
+| Route | Purpose |
+| :--- | :--- |
+| `POST /api/predict` | Executes the 3-Tier AI cascade based on sensor data. |
+| `POST /api/alert` | Autonomously evaluates risk and triggers Stellar vet dispatch. |
+| `POST /api/stellar/hash` | Anchors a SHA-256 hash of sensor telemetry to the ledger. |
+| `POST /api/stellar/reward` | Mints ECO_KUKK carbon/sustainability tokens. |
+| `POST /api/stellar/certificate` | Issues verifiable Health Certificates. |
+| `GET /api/weather` | Pulls OpenWeatherMap data for climate context. |
 
 ---
 
-## Option C — Production Deployment
+## 🏆 Hackathon Context
 
-Deploy the ML server separately on:
-
-* Render
-* Railway
-
-Start command:
-
-```bash
-uvicorn app:app --host 0.0.0.0 --port $PORT
-```
-
----
-
-# Stellar + Soroban Setup
-
-Deploy contracts:
-
-```bash
-cd contracts
-
-bash deploy.sh
-```
-
-Add contract ID:
-
-```env
-SOROBAN_CONTRACT_ID=C...
-```
-
-If unavailable, the app automatically falls back to Classic Horizon.
-
----
-
-# Demo Workflow
-
-1. Open `/`
-2. Navigate to `/farmer`
-3. Watch live telemetry updates
-4. Run predictions
-5. Review PFSI score and recommendations
-6. Connect Freighter wallet
-7. Anchor sensor data
-8. Open `/admin`
-9. Generate and verify certificates
-
----
-
-# Known Limitations
-
-| Limitation                  | Current Behavior      | Suggested Fix          |
-| --------------------------- | --------------------- | ---------------------- |
-| Soroban contract missing    | Uses Horizon fallback | Deploy contracts       |
-| ML models local-only        | Uses fallback rules   | Host ML service        |
-| ML server offline           | Uses rule engine      | Run FastAPI server     |
-| Testnet credentials missing | Rewards disabled      | Configure Stellar keys |
-
----
-
-# Verification
-
-## Type Check
-
-```bash
-npm run lint
-```
-
----
-
-## Build Issues
-
-If `.next` artifacts are locked:
-
-```bash
-rm -rf .next
-```
-
-Then rerun:
-
-```bash
-npm run build
-```
-
----
-
-# Deployment
-
-Recommended stack:
-
-* Frontend → Vercel
-* ML Service → Render/Railway
-* Blockchain → Stellar Testnet
-* Redis → Upstash
-
----
-
-# Future Improvements
-
-* Edge AI prediction on-device
-* Mobile farmer app
-* Real hardware sensor integration
-* Multi-farm analytics
-* Automated disease reporting
-* Carbon-credit tracking
-* Supply-chain marketplace integration
-
----
-
-# License
-
-MIT License.
-
-Built for hackathon demonstrations, smart agriculture research, and poultry farm monitoring experiments.
+This project was built to demonstrate how **AI and Web3 can solve physical-world supply chain and biosecurity crises.** 
+By combining the predictive reasoning of LLMs/Machine Learning with the trustless, immutable execution of the Stellar network, FlockChain AI proves that the future of farming is proactive, automated, and verifiable.
